@@ -3,10 +3,17 @@ import SearchBar from "@/components/SearchBar"
 import CustomFilter from "@/components/CustomFilter"
 import { fetchCar } from "@/utils"
 import CarCard from "@/components/CarCard"
+import { fuels, yearsOfProduction } from "@/constants"
 
 
-export default async function Home() {
-  const allCars = await fetchCar()
+export default async function Home({searchParams}) {
+  const allCars = await fetchCar({
+    manufacturer: searchParams.manufacturer || '',
+    year: searchParams.year || '2022',
+    fuel: searchParams.fuel || '',
+    limit: searchParams.limit || '10',
+    model: searchParams.model || '',
+  })
   console.log(allCars)
   const isDataEmpty = !Array.isArray(allCars) || allCars.length < 1 || !allCars
   console.log(isDataEmpty)
@@ -25,8 +32,8 @@ export default async function Home() {
         <div className="home__fiters">
           <SearchBar />
           <div className="home__filter-container">
-            <CustomFilter title="fuel" />
-            <CustomFilter title="year" />
+            <CustomFilter title="fuel" options={fuels} />
+            <CustomFilter title="year" options={yearsOfProduction}/>
           </div>
         </div>
         {!isDataEmpty ? (
